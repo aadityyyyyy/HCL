@@ -57,7 +57,7 @@ public class SecurityConfig {
        configuration.setAllowedOrigins(
     List.of(
         "http://localhost:5173",
-        "https://your-frontend-name.netlify.app"
+        "https://marvelous-snickerdoodle-65f7eb.netlify.app"
     )
 );
         configuration.setAllowedMethods(
