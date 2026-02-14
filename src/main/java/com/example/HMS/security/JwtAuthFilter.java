@@ -30,8 +30,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // 🔥 VERY IMPORTANT: SKIP PREFLIGHT REQUESTS
+        String path = request.getServletPath();
+
+        // ✅ 1. Skip preflight
         if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // ✅ 2. Skip auth endpoints completely
+        if (path.startsWith("/api/auth")) {
             filterChain.doFilter(request, response);
             return;
         }

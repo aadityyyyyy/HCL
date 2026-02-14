@@ -25,9 +25,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // ✅ REQUIRED IN SPRING BOOT 3.5.x
             .cors(Customizer.withDefaults())
-
             .csrf(csrf -> csrf.disable())
 
             .sessionManagement(session ->
@@ -36,12 +34,13 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
-                // ✅ PREFLIGHT
+                // Allow preflight
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // AUTH
+                // Allow auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
 
+                // Everything else needs authentication
                 .anyRequest().authenticated()
             )
 
@@ -54,20 +53,22 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
-       configuration.setAllowedOrigins(
-    List.of(
-        "http://localhost:5173",
-        "https://marvelous-snickerdoodle-65f7eb.netlify.app"
-    )
-);
-        configuration.setAllowedMethods(
-                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        );
+
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "https://marvelous-snickerdoodle-65f7eb.netlify.app"
+        ));
+
+        configuration.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "DELETE", "OPTIONS"
+        ));
+
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
